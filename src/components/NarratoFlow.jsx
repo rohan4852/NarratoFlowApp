@@ -1,5 +1,5 @@
-
 import { useState } from "react";
+import { useTheme } from "../contexts/ThemeContext";
 
 const insights = [
   {
@@ -17,6 +17,7 @@ const insights = [
 ];
 
 export default function NarratoFlow() {
+  const { theme } = useTheme();
   const [step, setStep] = useState(0);
   const [fileName, setFileName] = useState("");
 
@@ -25,8 +26,16 @@ export default function NarratoFlow() {
     if (file) setFileName(file.name);
   };
 
+  const getThemeClasses = (baseClasses) => {
+    return `${baseClasses} ${
+      theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white'
+    }`;
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white to-blue-50 p-4 flex flex-col items-center">
+    <div className={`min-h-screen ${
+      theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gradient-to-br from-white to-blue-50'
+    } p-4 flex flex-col items-center`}>
       <h1 className="text-3xl font-bold mb-6">NarratoFlow - AI Story Dashboard</h1>
 
       {step === 0 && (
@@ -35,14 +44,14 @@ export default function NarratoFlow() {
             type="file"
             accept=".csv"
             onChange={handleFileUpload}
-            className="border p-2 rounded"
+            className={getThemeClasses("border p-2 rounded")}
           />
-          <select className="p-2 border rounded">
+          <select className={getThemeClasses("p-2 border rounded")}>
             <option>Professional Theme</option>
             <option>Playful Theme</option>
           </select>
           <button
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow"
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700"
             onClick={() => setStep(1)}
           >
             Generate Story
@@ -55,7 +64,7 @@ export default function NarratoFlow() {
           {insights.map((insight, idx) => (
             <div
               key={idx}
-              className="p-4 bg-white rounded shadow hover:scale-[1.01] transition cursor-pointer"
+              className={getThemeClasses("p-4 rounded shadow hover:scale-[1.01] transition cursor-pointer")}
               onClick={() => setStep(2)}
             >
               <h2 className="text-xl font-semibold">{insight.title}</h2>
@@ -63,7 +72,7 @@ export default function NarratoFlow() {
             </div>
           ))}
           <button
-            className="px-4 py-2 bg-green-600 text-white rounded-lg shadow"
+            className="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700"
             onClick={() => setStep(3)}
           >
             Finish & Export
@@ -72,7 +81,7 @@ export default function NarratoFlow() {
       )}
 
       {step === 2 && (
-        <div className="w-full max-w-xl bg-white rounded shadow p-4">
+        <div className={getThemeClasses("w-full max-w-xl rounded shadow p-4")}>
           <h2 className="text-2xl font-bold mb-2">🎯 Loyalty Program Impact</h2>
           <p>
             After launching the loyalty program, customer churn decreased by 12%.
@@ -80,7 +89,7 @@ export default function NarratoFlow() {
             per loyal customer increased by ₹450/month.
           </p>
           <button
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             onClick={() => setStep(1)}
           >
             Back to Dashboard
@@ -91,11 +100,11 @@ export default function NarratoFlow() {
       {step === 3 && (
         <div className="flex flex-col items-center space-y-3">
           <h2 className="text-xl font-semibold">✅ Story Generated!</h2>
-          <button className="px-4 py-2 bg-purple-600 text-white rounded">
+          <button className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">
             Download Summary PDF
           </button>
           <button
-            className="px-4 py-2 border rounded"
+            className={getThemeClasses("px-4 py-2 border rounded hover:bg-gray-100 dark:hover:bg-gray-700")}
             onClick={() => setStep(0)}
           >
             Start Over
