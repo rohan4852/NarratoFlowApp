@@ -201,24 +201,25 @@ Generate a comprehensive response following the structure specified above.`;
 
       // Generate content with proper error handling and monitoring
       try {
-        const completion = await apiMonitoring.retryWithBackoff(() => openai.chat.completions.create({
-          model: "gpt-3.5-turbo",
-          messages: [
-            {
-              role: "system",
-              content: "You are an expert data analyst and storyteller who creates engaging narratives from CSV data."
-            },
-            {
-              role: "user",
-              content: prompt
-            }
-          ],
-          max_tokens: 1000,
-          temperature: 0.7,
-          presence_penalty: 0.1,
-          frequency_penalty: 0.1,
+        const completion = await apiMonitoring.retryWithBackoff(async () => {
+          return await openai.chat.completions.create({
+            model: "gpt-3.5-turbo",
+            messages: [
+              {
+                role: "system",
+                content: "You are an expert data analyst and storyteller who creates engaging narratives from CSV data."
+              },
+              {
+                role: "user",
+                content: prompt
+              }
+            ],
+            max_tokens: 1000,
+            temperature: 0.7,
+            presence_penalty: 0.1,
+            frequency_penalty: 0.1,
+          });
         });
-
         const generatedText = completion.choices[0]?.message?.content;
 
         if (!generatedText || generatedText.trim() === "") {
