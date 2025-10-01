@@ -11,18 +11,24 @@ const OPENAI_API_KEY = config.OPENAI_API_KEY;
 
 let openai;
 try {
-  if (!config.isConfigValid()) {
+  // Add more detailed validation
+  if (!OPENAI_API_KEY) {
+    console.error('API Key validation failed:', {
+      configHasKey: !!config.OPENAI_API_KEY,
+      envHasKey: !!process.env.REACT_APP_OPENAI_API_KEY
+    });
     throw new Error("OpenAI API key is missing or invalid. Please check your .env file.");
   }
+
   openai = new OpenAI({
     apiKey: OPENAI_API_KEY,
     maxRetries: 3,
+    dangerouslyAllowBrowser: true // Required for client-side usage
   });
   console.log("Successfully initialized OpenAI API");
 } catch (error) {
   console.error("Failed to initialize OpenAI:", error);
 }
-
 
 export default function NarratoFlow() {
   const { theme } = useTheme();

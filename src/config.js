@@ -1,12 +1,23 @@
 // Environment variable configuration
+console.log('Available environment variables:', {
+    NODE_ENV: process.env.NODE_ENV,
+    // Don't log the full API key, just check if it exists
+    HAS_API_KEY: !!process.env.REACT_APP_OPENAI_API_KEY,
+    ALL_ENV: Object.keys(process.env).filter(key => key.startsWith('REACT_APP_'))
+});
+
 const config = {
     OPENAI_API_KEY: process.env.REACT_APP_OPENAI_API_KEY || '',
 
     // Validate environment setup
     isConfigValid: () => {
         const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
-        if (!apiKey || apiKey === 'your-api-key-here') {
-            console.error('Missing or invalid REACT_APP_OPENAI_API_KEY. Please set it in your .env file');
+        if (!apiKey) {
+            console.error('REACT_APP_OPENAI_API_KEY is missing in environment');
+            return false;
+        }
+        if (apiKey === 'your-api-key-here') {
+            console.error('Please replace the placeholder API key in .env with your actual OpenAI API key');
             return false;
         }
         return true;

@@ -1,8 +1,6 @@
 
 # NarratoFlow – AI Story Dashboard
 
-Build Fest '25 submission – Theme 2 (Narrative Dashboard)
-
 NarratoFlow turns dull CSV business reports into an engaging AI‑generated story experience.
 
 ## ✨ Features
@@ -19,11 +17,26 @@ NarratoFlow turns dull CSV business reports into an engaging AI‑generated stor
 | Mock AI | Gemini‑style insight generator (static data) |
 | Build Tool | CRA (react‑scripts) |
 
-## 🚀 Quick Start
+## � Security Best Practices
+
+### API Key Security
+1. Never commit your API keys to Git
+2. Never share your API keys in public repositories
+3. Rotate your API keys if they are exposed
+4. Use environment variables for sensitive data
+
+### Environment Setup
+1. Get your OpenAI API key from https://platform.openai.com/api-keys
+2. Create a `.env` file from `.env.example`
+3. Add your API key to the `.env` file
+4. Never commit the `.env` file to Git
+
+## �🚀 Quick Start
 
 ### Prerequisites
 - Node.js & npm installed on your system
 - Download from: https://nodejs.org/
+- OpenAI API key (get it from https://platform.openai.com/api-keys)
 
 ### Installation
 1. Clone the repository:
