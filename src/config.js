@@ -7,17 +7,17 @@ console.log('Available environment variables:', {
 });
 
 const config = {
-    OPENAI_API_KEY: process.env.REACT_APP_OPENAI_API_KEY || '',
+    GEMINI_API_KEY: process.env.REACT_APP_GEMINI_API_KEY || '',
 
     // Validate environment setup
     isConfigValid: () => {
-        const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
+        const apiKey = process.env.REACT_APP_GEMINI_API_KEY;
         if (!apiKey) {
-            console.error('REACT_APP_OPENAI_API_KEY is missing in environment');
+            console.error('REACT_APP_GEMINI_API_KEY is missing in environment');
             return false;
         }
         if (apiKey === 'your-api-key-here') {
-            console.error('Please replace the placeholder API key in .env with your actual OpenAI API key');
+            console.error('Please replace the placeholder API key in .env with your actual Gemini API key');
             return false;
         }
         return true;
@@ -25,19 +25,19 @@ const config = {
 
     // AI model configuration
     model: {
-        name: 'gpt-3.5-turbo',
+        name: 'gemini-pro',  // Gemini's most capable model
         temperature: 0.7,
-        maxTokens: 1000,
-        presencePenalty: 0.1,
-        frequencyPenalty: 0.1,
+        maxTokens: 2048,     // Gemini allows larger responses
+        topK: 40,
+        topP: 0.95,
         maxRetries: 3
     },
     // API configuration
     api: {
-        baseURL: 'https://api.openai.com/v1',
+        baseURL: 'https://generativelanguage.googleapis.com',
         timeout: 30000, // 30 seconds
         retryDelay: 1000, // 1 second
-        rateLimitPerMin: 50 // Safe limit for free tier
+        rateLimitPerMin: 60 // Gemini's free tier is more generous
     },
     // Monitoring configuration
     monitoring: {
