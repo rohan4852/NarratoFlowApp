@@ -9,16 +9,10 @@ import config from "../config";
 // Initialize OpenAI with validation
 const OPENAI_API_KEY = config.OPENAI_API_KEY;
 
-// Debug logs for development
-console.log("Environment Variables:", {
-  OPENAI_API_KEY: OPENAI_API_KEY ? "Present" : "Missing",
-  NODE_ENV: process.env.NODE_ENV
-});
-
 let openai;
 try {
-  if (!OPENAI_API_KEY) {
-    throw new Error("OpenAI API key is missing. Please check your environment variables.");
+  if (!config.isConfigValid()) {
+    throw new Error("OpenAI API key is missing or invalid. Please check your .env file.");
   }
   openai = new OpenAI({
     apiKey: OPENAI_API_KEY,

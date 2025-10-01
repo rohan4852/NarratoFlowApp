@@ -1,11 +1,12 @@
 // Environment variable configuration
 const config = {
-    OPENAI_API_KEY: process.env.REACT_APP_OPENAI_API_KEY,
+    OPENAI_API_KEY: process.env.REACT_APP_OPENAI_API_KEY || '',
 
     // Validate environment setup
     isConfigValid: () => {
-        if (!process.env.REACT_APP_OPENAI_API_KEY) {
-            console.error('Missing required environment variable: REACT_APP_OPENAI_API_KEY');
+        const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
+        if (!apiKey || apiKey === 'your-api-key-here') {
+            console.error('Missing or invalid REACT_APP_OPENAI_API_KEY. Please set it in your .env file');
             return false;
         }
         return true;
