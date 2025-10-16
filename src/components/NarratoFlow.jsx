@@ -2,33 +2,11 @@ import { useState, useRef, useEffect } from "react";
 import { useTheme } from "../../src/contexts/ThemeContext";
 import Papa from "papaparse";
 import jsPDF from "jspdf";
-import OpenAI from "openai";
 import { apiMonitoring } from "../utils/apiMonitoring";
 import config from "../config";
-
-// Initialize OpenAI with validation
-const OPENAI_API_KEY = config.OPENAI_API_KEY;
-
-let openai;
-try {
-  // Add more detailed validation
-  if (!OPENAI_API_KEY) {
-    console.error('API Key validation failed:', {
-      configHasKey: !!config.OPENAI_API_KEY,
-      envHasKey: !!process.env.REACT_APP_OPENAI_API_KEY
-    });
-    throw new Error("OpenAI API key is missing or invalid. Please check your .env file.");
-  }
-
-  openai = new OpenAI({
-    apiKey: OPENAI_API_KEY,
-    maxRetries: 3,
-    dangerouslyAllowBrowser: true // Required for client-side usage
-  });
-  console.log("Successfully initialized OpenAI API");
-} catch (error) {
-  console.error("Failed to initialize OpenAI:", error);
-}
+import { generateFromPrompt } from "../utils/geminiClient";
+// Placeholder: provider client will be initialized when integrating Gemini or a server proxy
+let openai = null; // kept for backward compatibility in code paths that still reference it
 
 export default function NarratoFlow() {
   const { theme } = useTheme();
@@ -201,26 +179,9 @@ Generate a comprehensive response following the structure specified above.`;
 
       // Generate content with proper error handling and monitoring
       try {
-        const completion = await apiMonitoring.retryWithBackoff(async () => {
-          return await openai.chat.completions.create({
-            model: "gpt-3.5-turbo",
-            messages: [
-              {
-                role: "system",
-                content: "You are an expert data analyst and storyteller who creates engaging narratives from CSV data."
-              },
-              {
-                role: "user",
-                content: prompt
-              }
-            ],
-            max_tokens: 1000,
-            temperature: 0.7,
-            presence_penalty: 0.1,
-            frequency_penalty: 0.1,
-          });
+        const generatedText = await apiMonitoring.retryWithBackoff(async () => {
+          return await generateFromPrompt(prompt);
         });
-        const generatedText = completion.choices[0]?.message?.content;
 
         if (!generatedText || generatedText.trim() === "") {
           throw new Error("AI returned empty response");
@@ -310,22 +271,8 @@ Generate a comprehensive response following the structure specified above.`;
       const prompt = themePrompts[theme] + "\n" + JSON.stringify(csvData);
 
       const response = await apiMonitoring.retryWithBackoff(async () => {
-        const completion = await openai.chat.completions.create({
-          model: config.model.name,
-          messages: [
-            {
-              role: "system",
-              content: "You are a data storyteller that transforms CSV data into engaging narratives."
-            },
-            {
-              role: "user",
-              content: prompt
-            }
-          ],
-          temperature: config.model.temperature,
-          max_tokens: config.model.maxTokens,
-          presence_penalty: config.model.presencePenalty,
-          frequency_penalty: config.model.frequencyPenalty
+        const response = await apiMonitoring.retryWithBackoff(async () => {
+          return await generateFromPrompt(prompt);
         });
 
         // Track successful request

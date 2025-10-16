@@ -2,7 +2,7 @@
 console.log('Available environment variables:', {
     NODE_ENV: process.env.NODE_ENV,
     // Don't log the full API key, just check if it exists
-    HAS_API_KEY: !!process.env.REACT_APP_OPENAI_API_KEY,
+    HAS_GEMINI_KEY: !!process.env.REACT_APP_GEMINI_API_KEY,
     ALL_ENV: Object.keys(process.env).filter(key => key.startsWith('REACT_APP_'))
 });
 
@@ -72,8 +72,8 @@ const config = {
 const validateConfig = () => {
     const missing = [];
 
-    if (!config.OPENAI_API_KEY) {
-        missing.push('REACT_APP_OPENAI_API_KEY');
+    if (!config.GEMINI_API_KEY) {
+        missing.push('REACT_APP_GEMINI_API_KEY');
     }
 
     if (missing.length > 0) {
